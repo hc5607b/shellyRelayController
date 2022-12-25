@@ -1,4 +1,4 @@
-# shellyRelayController
+# Shelly Plus 1PM Relay Controller
 
 Controller system for Shelly Plus 1PM relay.
 
