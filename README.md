@@ -6,4 +6,4 @@ Relay controls hot water reserve, and is meant to warm it up at nights cheapest 
 Script runs from different laptop 3 times a day to make sure new prices are loaded to relay. So this application needs seperate server or old laptop to control the relay.
 
 
-To run properly, you need relayUpdate.py, getDataLib.py and data.temp at the same folder. After first run, app will create log.txt file.
+To run properly, you need relayUpdate.py, getDataLib.py and data.temp at the same folder. After first run, app will create log.txt file. Settings can be adjusted in properties.conf. There you can applay between which hours price will be checked and how many hours relay should be active.
