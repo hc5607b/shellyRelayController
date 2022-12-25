@@ -110,8 +110,31 @@ def init():
         print("No data found")
         return -2
 
+def loadParams():
+    try:
+        global startTime
+        global startDay
+        global endTime
+        global endDay
+        global onDuration
+        prop = open("properties.conf", "r")
+        dat = json.loads(str(prop.read()))
+        startTime = int(dat["starttime"])
+        startDay = int(dat["startday"])
+        endTime = int(dat["endtime"])
+        endDay = int(dat["endday"])
+        onDuration = int(dat["onhours"])
+        prop.close()
+        return 0
+    except:
+        return -1
+
+# print(startTime, startDay, endTime, endDay, onDuration)
 
 def GetLowestWholeHours(lupd = None):
+    lpRtn = loadParams()
+    if lpRtn == -1:
+        return -5, -5, -5
     st = init()
     if st == -1:
         return -2, -2, -2

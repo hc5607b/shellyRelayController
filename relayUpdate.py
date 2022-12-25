@@ -6,7 +6,21 @@ import getDataLib
 import requests
 import time
 
-workingDir = '/home/master/scripts/'
+workingDir = ''
+
+def loadProp():
+    try:
+        propF = open("properties.conf")
+        workingDir = json.loads(propF.read())["scriptlocation"]
+        propF.close()
+        return 0
+    except:
+        return -1
+
+if loadProp() == -1:
+    print("Properties file missing or invalid format")
+    exit()
+
 logfile = open(workingDir + 'log.txt', 'a')
 def log(dat):
     print(dat)
@@ -32,6 +46,7 @@ def checkInformation(activehours):
     if int(str(raw['jobs'][1]['timespec'])[4]) - 1 != activehours[len(activehours) - 1]:
         return False
     return True
+
 
 def update():
     success = 0
@@ -60,6 +75,9 @@ def update():
                     log("Parse error")
                 elif values == -4:
                     log("Data not found")
+                elif values == -5:
+                    log("Properties file missing or invalid format")
+                    return
         else:
             
             if checkInformation(values) == True and newUpdateTime.date() == lastUpdated.date():
@@ -69,8 +87,7 @@ def update():
         to += 1
         time.sleep(10)
 
-    # log(values, avg)
-    
+    # log(values)
     tries = 0
     while 1:
         log("Uploading..")
