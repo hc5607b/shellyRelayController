@@ -6,39 +6,47 @@ import getDataLib
 import requests
 import time
 
-workingDir = ''
+url = "http://IP/rpc/"
 
+# function for loading properties for application
 def loadProp():
     try:
+        global url
         propF = open("properties.conf")
-        workingDir = json.loads(propF.read())["scriptlocation"]
+        url = url.replace("IP", json.loads(propF.read())["relayIP"])
         propF.close()
         return 0
     except:
         return -1
 
+# let's load properties and exit if something goes wrong
 if loadProp() == -1:
-    print("Properties file missing or invalid format")
+    print("Properties file missing or invalid format. Ending process.")
     exit()
 
-logfile = open(workingDir + 'log.txt', 'a')
+# open log file
+logfile = open('log.txt', 'a')
 def log(dat):
     print(dat)
     logfile.write(f"[{datetime.datetime.now()}] {str(dat)}\n")
 
-url = "http://192.168.10.150/rpc/"
+# returns http get response. Needs shelly rpc command as argument. For example schedule.list returns http://[ip]/rpc/schedule.list http get response
 def httpGet(args):
     rtn = str(urllib.request.urlopen(url + args).read())
     return rtn
 
+# returns 0 or -1 based on http post call success. Takes post json object as arugemnt.
 def httpPost(myobj):
     c = requests.post(url, json = myobj)
     if "200" in str(c):
         return 0
     return -1
 
+# checks if Shelly relay has same schedule as argument hours. return true or false
 def checkInformation(activehours):
     h = httpGet("schedule.list")
+
+    # formats response format to correct json
     raw = json.loads(h[2:len(h) - 5])
     
     if int(str(raw['jobs'][0]['timespec'])[4]) != activehours[0]:
@@ -47,26 +55,31 @@ def checkInformation(activehours):
         return False
     return True
 
-
+# main function of script.
 def update():
     success = 0
     values = 0
     newUpdateTime = 0
     avg = 0
 
-    f = open(workingDir+"data.temp", 'r')
-    con = json.loads(f.read())
+    # loads last update time
+    f = open("data.temp", 'r')
+    lstUpd = json.loads(f.read())
     f.close()
-    lastUpdated = datetime.datetime.strptime(con['date'], '%Y-%m-%d %H:%M:%S')
-    log(f"Last updated: {lastUpdated}")
+    lastUpdated = datetime.datetime.strptime(lstUpd['date'], '%Y-%m-%d %H:%M:%S')
 
+    # counter for tries
     to = 0
     while 1:
+        # Exits if theres too many tries
         if to > 10:
             log("Update failed and aborted")
             return
+
+        # loads new hours, average price and updatetime based on price api data
         values, avg, newUpdateTime = getDataLib.GetLowestWholeHours(lastUpdated)
         
+        # error handling if reurned error code
         if type(values) != type([]):
             if values < 0:
                 if values == -2:
@@ -79,11 +92,13 @@ def update():
                     log("Properties file missing or invalid format")
                     return
         else:
-            
+            # checks if relay is already up to date. if not, break the loop and continue script
             if checkInformation(values) == True and newUpdateTime.date() == lastUpdated.date():
                 log("Alredy updated")
                 return
             break
+
+        # if failed, wait before retry
         to += 1
         time.sleep(10)
 
@@ -114,7 +129,7 @@ def update():
     if success == 1:
         jsonFormat = json.dumps({'date':str(newUpdateTime),'values':str(values), 'avg':round(avg, 2)})
         log(jsonFormat)
-        f1 = open(workingDir+"data.temp", 'a')
+        f1 = open("data.temp", 'a')
         f1.truncate(0)
         f1.write(jsonFormat)
         f1.close()

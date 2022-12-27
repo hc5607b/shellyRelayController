@@ -110,7 +110,7 @@ def init():
         print("No data found")
         return -2
 
-def loadParams():
+def loadConfig():
     try:
         global startTime
         global startDay
@@ -132,7 +132,7 @@ def loadParams():
 # print(startTime, startDay, endTime, endDay, onDuration)
 
 def GetLowestWholeHours(lupd = None):
-    lpRtn = loadParams()
+    lpRtn = loadConfig()
     if lpRtn == -1:
         return -5, -5, -5
     st = init()
