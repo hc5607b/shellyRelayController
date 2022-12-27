@@ -7,3 +7,5 @@ Script runs from different laptop 3 times a day to make sure new prices are load
 
 
 To run properly, you need relayUpdate.py, getDataLib.py and data.temp at the same folder. After first run, app will create log.txt file. Settings can be adjusted in properties.conf. There you can applay between which hours price will be checked and how many hours relay should be active.
+
+I'm using crontab to run script.
