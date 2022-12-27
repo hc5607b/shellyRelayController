@@ -68,10 +68,10 @@ def update():
     f.close()
     lastUpdated = datetime.datetime.strptime(lstUpd['date'], '%Y-%m-%d %H:%M:%S')
 
-    # counter for tries
+    # download new data
     to = 0
     while 1:
-        # Exits if theres too many tries
+        # exits if theres too many tries
         if to > 10:
             log("Update failed and aborted")
             return
@@ -102,30 +102,36 @@ def update():
         to += 1
         time.sleep(10)
 
-    # log(values)
+    # uploads new schedule to Shelly
     tries = 0
     while 1:
         log("Uploading..")
+        # exits if theres too many tries
         if tries > 5:
             log("Data upload failed")
             return
         tries += 1
-        chk = httpPost({"id":1,"method":"Schedule.Update","params":{"id":1,"timespec":str(f"0 0 {values[0]} * * SUN,MON,TUE,WED,THU,FRI,SAT")}})
-        chk += httpPost({"id":2,"method":"Schedule.Update","params":{"id":2,"timespec":str(f"0 0 {values[len(values)-1] + 1} * * SUN,MON,TUE,WED,THU,FRI,SAT")}})
-        if chk == 0:
 
+        # upload new schedule for relay activation and deactivation
+        chk = httpPost({"id":1,"method":"Schedule.Update","params":{"id":1,"timespec":str(f"0 0 {values[0]} * * SUN,MON,TUE,WED,THU,FRI,SAT")}})
+        chk -= httpPost({"id":2,"method":"Schedule.Update","params":{"id":2,"timespec":str(f"0 0 {values[len(values)-1] + 1} * * SUN,MON,TUE,WED,THU,FRI,SAT")}})
+
+        # if success, chk sould be 0
+        if chk == 0:
+            # double check that correct is uploaded
             if checkInformation(values) == True:
                 log("Information match")
             else:
                 log("Information dont match")
                 time.sleep(10)
                 continue
-                
             log("Data uploaded successfully")
             success = 1
             break
+
         time.sleep(10)
 
+    # if upload was succeed, save update date to data.temp
     if success == 1:
         jsonFormat = json.dumps({'date':str(newUpdateTime),'values':str(values), 'avg':round(avg, 2)})
         log(jsonFormat)
