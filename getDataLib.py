@@ -13,7 +13,6 @@ class Hour:
         return f"Timestamp({self.day}, {self.hour}, {self.price})"
 
 raw = ""
-
 priceOfDay = -1
 hours = []
 
@@ -90,7 +89,6 @@ def init():
     hget = ""
     try:
         hget = urllib.request.urlopen("https://elspotcontrol.netlify.app/spotprices-v01-FI.json")
-        print(hget.getcode())
     except:
         return -1
     if hget.getcode() != 200:
@@ -128,8 +126,6 @@ def loadConfig():
         return 0
     except:
         return -1
-
-# print(startTime, startDay, endTime, endDay, onDuration)
 
 def GetLowestWholeHours(lupd = None):
     lpRtn = loadConfig()
