@@ -85,6 +85,7 @@ def formatToJSON(arr):
 def init():
     global hours
     global raw
+    hours = []
 
     hget = ""
     try:
