@@ -33,6 +33,7 @@ def filterTime():
             continue
         if hours[i].day == endDay and hours[i].hour == endTime:
             endID = i
+    
     if startID == -1 or endID == -1:
         return -1
     return hours[startID:endID]
@@ -53,22 +54,19 @@ def getLowestHours(sums):
     for i in range(0,len(sums)):
         if sums[i] < val:
             val = sums[i]
-            lID = i-1
+            lID = i
     global priceOfDay 
     priceOfDay = val
     onHours = []
-    # print(lID)
     _start = startTime + lID
     if _start > 23:
-        _start = _start - 23
+        _start = _start - 24
     for i in range(0, 3):
         nTime = _start + i
         if nTime > 23:
-            nTime = nTime - 23
+            nTime = nTime - 24
         onHours.append(nTime)
     return onHours
-
-
 
 def GetLowestSingleHours():
     print(hours)

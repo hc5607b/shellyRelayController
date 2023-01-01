@@ -48,10 +48,10 @@ def checkInformation(activehours):
 
     # formats response format to correct json
     raw = json.loads(h[2:len(h) - 5])
-    
-    if int(str(raw['jobs'][0]['timespec'])[4]) != activehours[0]:
+
+    if int(str(raw['jobs'][0]['timespec']).split(' ')[2]) != activehours[0]:
         return False
-    if int(str(raw['jobs'][1]['timespec'])[4]) - 1 != activehours[len(activehours) - 1]:
+    if int(str(raw['jobs'][1]['timespec']).split(' ')[2]) - 1 != activehours[len(activehours) - 1]:
         return False
     return True
 
@@ -78,6 +78,7 @@ def update():
 
         # loads new hours, average price and updatetime based on price api data
         values, avg, newUpdateTime = getDataLib.GetLowestWholeHours(lastUpdated)
+        logger.Print(f"Power hours for next cycle {values}")
         
         # error handling if reurned error code
         if type(values) != type([]):
