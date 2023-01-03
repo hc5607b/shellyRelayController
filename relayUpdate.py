@@ -2,7 +2,6 @@ import os
 import urllib.request
 import json
 import datetime
-import getDataLib
 import getDataLibv2
 import requests
 import time
