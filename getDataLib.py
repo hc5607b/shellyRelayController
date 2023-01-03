@@ -145,4 +145,4 @@ def GetLowestWholeHours(lupd = None):
 
 # lowest = GetLowestWholeHours()
 # print(GetLowestWholeHours())
-# print(GetLowestSingleHours())
+# print(GetLowestSingleHours())asdasd
