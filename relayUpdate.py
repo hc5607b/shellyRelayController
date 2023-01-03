@@ -77,16 +77,16 @@ def getPowerHours():
         return -1
 
     prcs = getDataLibv2.loadPrices()
-    if prcs < 0:
+    if type(prcs) != type([]) and prcs < 0:
         return -2
     ts = getDataLibv2.applyTimeSection(prcs, startDay, startTime, endDay, endTime)
-    if ts < 0:
+    if type(ts) != type([]) and ts < 0:
         return -3
     chps = getDataLibv2.getCheapestInRow(ts, onDuration)
-    if chps < 0:
+    if type(chps) != type([]) and chps < 0:
         return -3
     rtn = getDataLibv2.combineTimes(chps)
-    if rtn < 0:
+    if type(rtn) != type([]) and rtn < 0:
         return -3
     return rtn[0]
 
