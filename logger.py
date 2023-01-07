@@ -10,9 +10,9 @@ class LogType(Enum):
 
 file = None
 
-def openLog():
+def openLog(location = "log.txt"):
     global file
-    file = open("log.txt", "a")
+    file = open(location, "a")
 
 def closeLog():
     global file
