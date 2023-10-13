@@ -1,4 +1,4 @@
-# Shelly Plus 1PM Relay Controller
+# Shelly Plus 1PM Relay Controller (Stabile with firmware 1.0.3)
 
 Controller system for Shelly Plus 1PM relay.
 
@@ -10,3 +10,5 @@ To run properly, you need relayUpdate.py, getDataLib.py, logger.py, properties.c
 I'm using crontab to run script. I recomend using this format for cron: 34 19 * * * cd /home/[username]/scripts && python3 relayUpdate.py
 
 Usage of code at users own risk. CODE IS NOT READY YET, but still working at the moment.
+
+Code last updated 13.10.2023
