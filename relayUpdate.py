@@ -51,10 +51,10 @@ def httpPost(myobj):
 
 # checks if Shelly relay has same schedule as argument hours. return true or false
 def checkInformation(activehours):
-    h = httpGet("schedule.list")
+    h = httpGet("Schedule.List")
 
     # formats response format to correct json
-    raw = json.loads(h[2:len(h) - 5])
+    raw = json.loads(h[2:len(h) - 13] + "}")
 
     if int(str(raw['jobs'][0]['timespec']).split(' ')[2]) != activehours[0]:
         return False
